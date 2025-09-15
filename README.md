@@ -337,7 +337,7 @@ The globs used when linting a workspace with the `markdownlint.lintWorkspace` co
 ```jsonc
 [
     // Source: https://github.com/microsoft/vscode/blob/main/extensions/markdown-basics/package.json
-    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}",
+    "**/*.{md,mkd,mdwn,mdown, markdown,markdn,mdtxt,mdtext,workbook}",
     // Source: https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/search/browser/search.contribution.ts
     "!**/*.code-search",
     "!**/bower_components",
@@ -348,7 +348,7 @@ The globs used when linting a workspace with the `markdownlint.lintWorkspace` co
 ]
 ```
 
-This list can be customized at workspace and user scope to include or exclude additional files and directories.
+This list can be customized at the workspace and user scope to include or exclude additional files and directories.
 For more information about syntax, see the ["Command Line" section of the markdownlint-cli2 documentation](https://github.com/DavidAnson/markdownlint-cli2#command-line).
 
 ## Suppress
@@ -382,5 +382,5 @@ The following snippets are available when editing a Markdown document (press `Ct
 Running JavaScript from custom rules, `markdown-it` plugins, or configuration files (such as `.markdownlint.cjs`/`.markdownlint-cli2.cjs`) could be a security risk, so VS Code's [Workspace Trust setting](https://code.visualstudio.com/docs/editor/workspace-trust) is honored to block JavaScript for untrusted workspaces.
 
 ## History
-
+ 
 See [CHANGELOG.md](CHANGELOG.md).
