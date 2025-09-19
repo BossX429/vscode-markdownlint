@@ -18,6 +18,13 @@ This is a Visual Studio Code extension that surfaces markdownlint diagnostics an
 - Tests open workspace files like `README.md`/`CHANGELOG.md`, intentionally introduce violations, verify diagnostics and code actions, then clean up.
 - Timeouts and cleanup: Tests wrap operations with a 10s timeout and dispose subscriptions; avoid adding long-running operations without bumping timeouts.
 - Web tests rely on the web bundle; avoid Node-only APIs in code paths executed in the web worker (see bundling constraints below).
+
+### Windows tips for UI tests
+- Close all VS Code windows before running `npm run test-ui` to avoid a single-instance mutex conflict ("Error mutex already exists").
+- If the UI run still exits with code 1, ensure no lingering Code processes are running (Task Manager) or try a fresh session/reboot.
+- Prefer running UI tests in CI for a clean environment. If stabilizing locally, you can add a small delay between the two launches in `test-ui/run-tests.mjs`.
+- For `npm run test-web` on Windows, the script uses `sed`; run under Git Bash or adapt that step to a PowerShell `-replace` equivalent.
+
 ### Debugging
 - Use `.vscode/launch.json`:
   - Launch Extension (desktop): builds and runs the extension in the Extension Host.
