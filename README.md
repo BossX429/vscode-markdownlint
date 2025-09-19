@@ -382,5 +382,5 @@ The following snippets are available when editing a Markdown document (press `Ct
 Running JavaScript from custom rules, `markdown-it` plugins, or configuration files (such as `.markdownlint.cjs`/`.markdownlint-cli2.cjs`) could be a security risk, so VS Code's [Workspace Trust setting](https://code.visualstudio.com/docs/editor/workspace-trust) is honored to block JavaScript for untrusted workspaces.
 
 ## History
- 
+
 See [CHANGELOG.md](CHANGELOG.md).
