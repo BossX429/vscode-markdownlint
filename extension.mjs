@@ -177,8 +177,20 @@ class FsWrapper {
 
 	// Implements fs.readdir via vscode.workspace.fs
 	fwReaddir (pathSegment, options, callback) {
-		// eslint-disable-next-line no-param-reassign
-		callback ||= options;
+		let readdirOptions = options;
+		let readdirCallback = callback;
+		if (typeof readdirOptions === "function") {
+			readdirCallback = readdirOptions;
+			readdirOptions = {};
+		} else if (typeof readdirOptions === "string") {
+			readdirOptions = { "encoding": readdirOptions };
+		} else if ((readdirOptions === undefined) || (readdirOptions === null)) {
+			readdirOptions = {};
+		}
+		const { encoding = "utf8", withFileTypes = false } = readdirOptions;
+		const bufferSupported = typeof Buffer !== "undefined";
+		const textEncoder = (typeof TextEncoder === "undefined") ? null : new TextEncoder();
+		readdirCallback ||= options;
 		vscode.workspace.fs.readDirectory(
 			this.fwFolderUriWithPathSegment(pathSegment)
 		).then(
@@ -189,7 +201,25 @@ class FsWrapper {
 							name,
 							fileType
 						] = nameAndType;
-						return options.withFileTypes ?
+						const bufferName = bufferSupported ? Buffer.from(name) : null;
+						const nameOrBuffer = (() => {
+							if (encoding === "buffer") {
+								if (bufferSupported) {
+									return bufferName;
+								}
+								if (textEncoder) {
+									return textEncoder.encode(name);
+								}
+								return name;
+							}
+							if (bufferSupported) {
+								return encoding === "utf8" ?
+									bufferName.toString() :
+									bufferName.toString(encoding);
+							}
+							return name;
+						})();
+						return withFileTypes ?
 							{
 								/* eslint-disable no-bitwise */
 								"isBlockDevice": FsWrapper.fwFalse,
@@ -201,14 +231,14 @@ class FsWrapper {
 								"isSymbolicLink":
 									(fileType & vscode.FileType.SymbolicLink) ? FsWrapper.fwTrue : FsWrapper.fwFalse,
 								/* eslint-enable no-bitwise */
-								name
+								"name": nameOrBuffer
 							} :
-							name;
+							nameOrBuffer;
 					}
 				);
-				callback(null, namesOrDirents);
+				readdirCallback(null, namesOrDirents);
 			},
-			callback
+			readdirCallback
 		);
 	}
 
@@ -259,8 +289,10 @@ class FsWrapper {
 		this.lstat = this.stat;
 		this.promises = {};
 		this.promises.access = promisify(this.fwAccess).bind(this);
+		this.promises.readdir = promisify(this.fwReaddir).bind(this);
 		this.promises.readFile = promisify(this.fwReadFile).bind(this);
 		this.promises.stat = promisify(this.fwStat).bind(this);
+		this.promises.lstat = this.promises.stat;
 	}
 }
 
@@ -282,8 +314,10 @@ class FsNull {
 		this.lstat = this.access;
 		this.promises = {};
 		this.promises.access = promisify(FsNull.fnError);
+		this.promises.readdir = this.promises.access;
 		this.promises.readFile = this.promises.access;
 		this.promises.stat = this.promises.access;
+		this.promises.lstat = this.promises.stat;
 	}
 }
 
