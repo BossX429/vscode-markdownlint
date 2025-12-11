@@ -1,0 +1,23 @@
+name: Request Copilot Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  request-review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Request Copilot review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Add a comment mentioning @codex to trigger review
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '@codex please review this PR'
+            });
