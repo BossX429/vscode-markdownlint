@@ -1,6 +1,8 @@
 {
-  "exclude": [
+  "skip": [
     "https://www.npmjs.com",
-    "https://www.npmjs.com/search?q=keywords:*"
+    "https://www.npmjs.com/*",
+    "https://npmjs.com",
+    "https://npmjs.com/*"
   ]
 }
