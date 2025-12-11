@@ -1,14 +1,10 @@
 {
   "skip": [
-    "https://www.npmjs.com",
-    "https://www.npmjs.com/*",
-    "https://npmjs.com",
-    "https://npmjs.com/*",
-    "https://thisdavej.com/*"
+    "https://www.npmjs.com*",
+    "https://npmjs.com*",
+    "https://thisdavej.com*",
+    "https://github.com/*",
+    "https://gist.github.com/*"
   ],
-  "retry": true,
-  "retryErrors": true,
-  "retryErrorsCount": 3,
-  "retryErrorsJitter": 1000,
-  "concurrency": 10
+  "concurrency": 5
 }
